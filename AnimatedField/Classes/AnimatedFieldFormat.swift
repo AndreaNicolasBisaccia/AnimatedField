@@ -31,6 +31,9 @@ public struct AnimatedFieldFormat {
     /// TextField text color
     public var textColor = UIColor.darkGray
     
+    /// Eye button color
+    public var eyeButtonColor = UIColor.lightGray
+    
     /// Counter text color
     public var counterColor = UIColor.darkGray
     

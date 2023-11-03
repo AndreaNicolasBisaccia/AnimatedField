@@ -149,6 +149,21 @@ open class AnimatedField: UIView {
     /// Lowercased field format
     public var lowercased = false
     
+    /// TextField contentType
+    public var contentType = UITextContentType.name {
+        didSet { textField.textContentType = contentType }
+    }
+    
+    /// Keyboard correction
+    public var correction = UITextAutocorrectionType.no {
+        didSet { textField.autocorrectionType = correction }
+    }
+    
+    /// Keyboard spellCheking
+    public var spellCheking = UITextSpellCheckingType.no {
+        didSet { textField.spellCheckingType = spellCheking }
+    }
+    
     /// Keyboard type
     public var keyboardType = UIKeyboardType.alphabet {
         didSet { textField.keyboardType = keyboardType }
@@ -208,7 +223,7 @@ open class AnimatedField: UIView {
             textView.font = format.textFont
             textView.textColor = format.textColor
             lineView.backgroundColor = format.lineColor
-            eyeButton.tintColor = format.textColor
+            eyeButton.tintColor = format.eyeButtonColor
             counterLabel.isHidden = !format.counterEnabled
             counterLabel.font = format.counterFont
             counterLabel.textColor = format.counterColor
@@ -293,7 +308,7 @@ open class AnimatedField: UIView {
     
     private func setupEyeButton() {
         showVisibleButton = false
-        eyeButton.tintColor = format.textColor
+        eyeButton.tintColor = format.eyeButtonColor
     }
     
     private func setupAlertTitle() {
@@ -408,9 +423,7 @@ extension AnimatedField {
         alertLabel.text = message
         alertLabel.textColor = format.alertTitleActive ? format.alertColor : format.titleColor
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            if (self?.format.titleAlwaysVisible ?? true) {
-                self?.titleLabel.alpha = 0.0
-            }
+            self?.titleLabel.alpha = 0.0
             self?.alertLabel.alpha = 1.0
         }) { [weak self] (completed) in
             self?.alertLabel.shake()

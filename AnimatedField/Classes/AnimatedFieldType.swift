@@ -48,9 +48,9 @@ public enum AnimatedFieldType {
     
     var validationError: String {
         switch self {
-        case .email: return "Email is not valid!"
+        case .email: return "Email non valida!"
         case .username: return "Username is not valid!"
-        case .password: return "Password is not valid!"
+        case .password: return "La password deve essere compresa tra 8 e 24 caratteri"
         case .price: return "Price is not valid!"
         case .url: return "Url is not valid!"
         default: return ""
