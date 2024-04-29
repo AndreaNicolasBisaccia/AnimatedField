@@ -473,9 +473,13 @@ extension AnimatedField {
         }
     }
     
-    func highlightField(_ highlight: Bool) {
-        guard let color = format.highlightColor else { return }
+    func highlightFieldTitle(_ highlight: Bool) {
+        guard let color = format.highlightTitleColor else { return }
         titleLabel.textColor = highlight ? color : format.titleColor
+    }
+    
+    func highlightFieldBorderLine(_ highlight: Bool) {
+        guard let color = format.highlightBorderLineColor else { return }
         lineView.backgroundColor = highlight ? color : format.lineColor
     }
     

@@ -79,13 +79,15 @@ extension AnimatedField: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         if !format.titleAlwaysVisible && textField.text?.count == 0 { animateIn() }
         hideAlert()
-        highlightField(true)
+        highlightFieldTitle(true)
+        highlightFieldBorderLine(true)
         delegate?.animatedFieldDidBeginEditing(self)
     }
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
         if !format.titleAlwaysVisible && textField.text?.count == 0 { animateOut() }
-        highlightField(false)
+        highlightFieldTitle(false)
+        highlightFieldBorderLine(false)
         delegate?.animatedFieldDidEndEditing(self)
         
         if let error = validateText(textField.text) {

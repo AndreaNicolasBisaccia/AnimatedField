@@ -80,14 +80,16 @@ extension AnimatedField: UITextViewDelegate {
         beginTextViewPlaceholder()
         if !format.titleAlwaysVisible { animateIn() }
         hideAlert()
-        highlightField(true)
+        highlightFieldTitle(true)
+        highlightFieldBorderLine(true)
         delegate?.animatedFieldDidBeginEditing(self)
     }
     
     public func textViewDidEndEditing(_ textView: UITextView) {
         endTextViewPlaceholder()
         if !format.titleAlwaysVisible { animateOut() }
-        highlightField(false)
+        highlightFieldTitle(false)
+        highlightFieldBorderLine(true)
         delegate?.animatedFieldDidEndEditing(self)
         
         if let error = validateText(textView.text) {

@@ -73,8 +73,11 @@ public struct AnimatedFieldFormat {
     /// Enable counter animation on change
     public var counterAnimation = false
     
-    /// Highlight color when becomes active
-    public var highlightColor: UIColor? = UIColor(displayP3Red: 0, green: 139/255, blue: 96/255, alpha: 1.0)
+    /// Highlight title color when becomes active
+    public var highlightTitleColor: UIColor? = UIColor(displayP3Red: 0, green: 139/255, blue: 96/255, alpha: 1.0)
+    
+    /// Highlight border line color when becomes active
+    public var highlightBorderLineColor: UIColor? = UIColor(displayP3Red: 0, green: 139/255, blue: 96/255, alpha: 1.0)
     
     public init() {}
 }
