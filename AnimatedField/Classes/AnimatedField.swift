@@ -150,7 +150,7 @@ open class AnimatedField: UIView {
     public var lowercased = false
     
     /// TextField contentType
-    public var contentType = UITextContentType.name {
+    public var contentType: UITextContentType? = nil {
         didSet { textField.textContentType = contentType }
     }
     
