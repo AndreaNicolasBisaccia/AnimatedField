@@ -523,28 +523,37 @@ extension AnimatedField {
 
 extension AnimatedField: AnimatedFieldInterface {
     
-    open func restart() {
+    public func restart() {
         _ = resignFirstResponder()
         endEditing(true)
         textField.text = ""
     }
     
-    open func showAlert(_ message: String? = nil) {
+    public func showAlert(_ message: String? = nil) {
         guard format.alertEnabled else { return }
         textField.textColor = format.alertFieldActive ? format.alertColor : format.textColor
         lineView.backgroundColor = format.alertLineActive ? format.alertColor : format.lineColor
         animateInAlert(message)
     }
     
-    open func hideAlert() {
+    public func hideAlert() {
         textField.textColor = format.textColor
         lineView.backgroundColor = format.lineColor
         animateOutAlert()
     }
     
-    open func secureField(_ secure: Bool) {
+    public func secureField(_ secure: Bool) {
         isSecure = secure
         eyeButton.setImage(secure ? format.visibleOnImage : format.visibleOffImage, for: .normal)
         delegate?.animatedField(self, didSecureText: secure)
+    }
+    
+    public func resetTextView() {
+        textView.textColor = format.textColor
+        textView.font = format.textFont
+    }
+    
+    public func showTitle() {
+        animateIn()
     }
 }
