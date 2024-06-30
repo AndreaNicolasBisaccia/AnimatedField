@@ -18,7 +18,7 @@ public enum AnimatedFieldType {
     case url
     case datepicker(UIDatePicker.Mode?, Date?, Date?, Date?, String?, String?) // mode, default date, min date, max date, choose text, date format
     case numberpicker(Int, Int, Int, String?) // default number, min number, max number, choose text
-    case multiline
+    case multiline(Int?, Int?) //maxLines, height
     
     var decimal: String {
         var separator = Locale.current.decimalSeparator ?? "\\."

@@ -44,6 +44,7 @@ open class AnimatedField: UIView {
     private var datePicker: UIDatePicker?
     private var initialDate: Date?
     private var dateFormat: String?
+    private var textViewHeightConst: Int?
     
     /// Picker values
     private var numberPicker: UIPickerView?
@@ -126,8 +127,10 @@ open class AnimatedField: UIView {
             if case AnimatedFieldType.url = type {
                 keyboardType = .URL
             }
-            if case AnimatedFieldType.multiline = type {
-                showTextView(true)
+            if case let AnimatedFieldType.multiline(maxLines, height) = type {
+                showTextView(true, maxLines)
+                textViewHeightConst = height
+                textView.isScrollEnabled = height != nil
                 setupTextViewConstraints()
             } else {
                 showTextView(false)
@@ -234,7 +237,7 @@ open class AnimatedField: UIView {
     
     open var text: String? {
         get {
-            return textField.isHidden ? (textView.text == placeholder && textView.textColor == UIColor.lightGray.withAlphaComponent(0.8) ? "" : textView.text) : textField.text
+            return textField.isHidden ? (textView.text == placeholder && textView.textColor == attributedPlaceholder?.attribute(.foregroundColor, at: 0, effectiveRange: nil) as? UIColor ?? UIColor.lightGray.withAlphaComponent(0.8) ? "" : textView.text) : textField.text
         }
         set {
             textField.text = textField.isHidden ? nil : newValue
@@ -288,7 +291,7 @@ open class AnimatedField: UIView {
     
     private func setupTextView() {
         textView.delegate = self
-        // textView.textColor = format.textColor
+        textView.textColor = attributedPlaceholder == nil ? format.textColor : attributedPlaceholder?.attribute(.foregroundColor, at: 0, effectiveRange: nil) as? UIColor ?? UIColor.lightGray.withAlphaComponent(0.8)
         textView.tag = tag
         textView.textContainerInset = .zero
         textView.contentInset = UIEdgeInsets(top: 3, left: -5, bottom: 6, right: 0)
@@ -296,10 +299,14 @@ open class AnimatedField: UIView {
         endTextViewPlaceholder()
     }
     
-    private func showTextView(_ show: Bool) {
+    private func showTextView(_ show: Bool, _ maxLines: Int?=nil) {
         textField.isHidden = show
         textField.text = show ? nil : ""
         textView.isHidden = !show
+        if let maxLines = maxLines {
+            textView.textContainer.maximumNumberOfLines = maxLines
+            textView.textContainer.lineBreakMode = .byTruncatingTail
+        }
     }
     
     private func setupLine() {
@@ -439,7 +446,7 @@ extension AnimatedField {
     }
     
     func updateCounterLabel() {
-        let count = textView.text == attributedPlaceholder?.string && textView.textColor == UIColor.lightGray.withAlphaComponent(0.8) ? (textView.text.count - (attributedPlaceholder?.string.count ?? 0)) : textView.text.count
+        let count = textView.text == attributedPlaceholder?.string && textView.textColor == attributedPlaceholder?.attribute(.foregroundColor, at: 0, effectiveRange: nil) as? UIColor ?? UIColor.lightGray.withAlphaComponent(0.8) ? (textView.text.count - (attributedPlaceholder?.string.count ?? 0)) : textView.text.count
         let value = (dataSource?.animatedFieldLimit(self) ?? 0) - count
         counterLabel.text = format.countDown ? "\(value)" : "\((textField.text?.count ?? 0) + 1)/\(dataSource?.animatedFieldLimit(self) ?? 0)"
         if format.counterAnimation {
@@ -451,25 +458,35 @@ extension AnimatedField {
     }
     
     func resizeTextViewHeight() {
-        let size = textView.sizeThatFits(CGSize(width: textView.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
-        textViewHeightConstraint.constant = 10 + size.height
+        var size = 0
+        
+        if let height = textViewHeightConst {
+            size = height
+        } else {
+            size = Int((textView.sizeThatFits(CGSize(width: textView.frame.size.width, height: CGFloat.greatestFiniteMagnitude))).height) + 10
+        }
+        
+        textViewHeightConstraint.constant = CGFloat(size)
         UIView.animate(withDuration: 0.3) { [weak self] in
             self?.layoutIfNeeded()
         }
-        delegate?.animatedField(self, didResizeHeight: size.height + 10 + titleLabel.frame.size.height)
+        delegate?.animatedField(self, didResizeHeight: CGFloat(size) + titleLabel.frame.size.height)
     }
     
     func endTextViewPlaceholder() {
         if textView.text == "" {
             textView.text = placeholder
-            textView.textColor = UIColor.lightGray.withAlphaComponent(0.8)
+            textView.textColor = attributedPlaceholder?.attribute(.foregroundColor, at: 0, effectiveRange: nil) as? UIColor ?? UIColor.lightGray.withAlphaComponent(0.8)
+            textView.font = attributedPlaceholder?.attribute(.font, at: 0, effectiveRange: nil) as? UIFont
         }
     }
     
     func beginTextViewPlaceholder() {
-        if textView.text == placeholder && textView.textColor == UIColor.lightGray.withAlphaComponent(0.8) {
+        if textView.text == placeholder &&
+            textView.textColor == attributedPlaceholder?.attribute(.foregroundColor, at: 0, effectiveRange: nil) as? UIColor ?? UIColor.lightGray.withAlphaComponent(0.8) {
             textView.text = ""
             textView.textColor = format.textColor
+            textView.font = format.textFont
         }
     }
     
