@@ -161,6 +161,11 @@ open class AnimatedField: UIView {
     public var correction = UITextAutocorrectionType.no {
         didSet { textField.autocorrectionType = correction }
     }
+
+    /// Keyboard capitalization
+    public var capitalization = UITextAutocapitalizationType.sentences {
+        didSet { textField.autocapitalizationType = capitalization }
+    }	
     
     /// Keyboard spellCheking
     public var spellCheking = UITextSpellCheckingType.no {
