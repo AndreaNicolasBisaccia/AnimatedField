@@ -1,16 +1,22 @@
-// swift-tools-version:5.1
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
     name: "AnimatedField",
+    platforms: [
+        .iOS(.v10)   // stesso deployment target del podspec
+    ],
     products: [
         .library(name: "AnimatedField", targets: ["AnimatedField"]),
     ],
-    dependencies: [
-    ],
+    dependencies: [],
     targets: [
-        .target(name: "AnimatedField", dependencies: [])
+        .target(
+            name: "AnimatedField",
+            path: "AnimatedField/Classes",
+            resources: [
+                .process("AnimatedField.xib")
+            ]
+        )
     ]
 )
