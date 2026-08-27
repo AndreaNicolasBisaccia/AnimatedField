@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import UIKit
 
-public protocol AnimatedFieldDataSource: class {
+public protocol AnimatedFieldDataSource {
     
     /**
      ------------------------------------------------------------------------------------------
